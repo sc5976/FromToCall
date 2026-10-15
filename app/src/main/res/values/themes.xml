@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.FromToCall" parent="android:Theme.Material.NoActionBar">
+    <!--
+        MainActivity наследуется от AppCompatActivity (нужно ради
+        AppCompatDelegate.setApplicationLocales — переключатель языка),
+        поэтому тема обязана быть AppCompat. Внутри Compose рисует своё,
+        визуальной разницы нет.
+    -->
+    <style name="Theme.FromToCall" parent="Theme.AppCompat.NoActionBar">
         <item name="android:statusBarColor">@color/background</item>
         <item name="android:navigationBarColor">@color/background</item>
         <item name="android:windowBackground">@color/background</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>
