@@ -42,4 +42,9 @@
     <string name="settings_picker_title">Длительность</string>
     <string name="settings_picker_ok">Готово</string>
     <string name="settings_picker_cancel">Отмена</string>
+
+    <string name="settings_language">Язык</string>
+    <string name="settings_language_system">Системный</string>
+    <string name="settings_language_russian">Русский</string>
+    <string name="settings_language_english">English</string>
 </resources>

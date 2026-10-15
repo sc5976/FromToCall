@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FromToCall</string>
+    <string name="arrival_time">Arrival time</string>
+    <string name="departure_time">Departure time</string>
+    <string name="time_remaining">Time left</string>
+    <string name="settings">Settings</string>
+
+    <string name="workday_full">Monday–Thursday</string>
+    <string name="workday_short">Friday</string>
+    <string name="workday_saturday">Saturday</string>
+    <string name="workday_sunday">Sunday</string>
+    <string name="notification_sound">Notification sound</string>
+    <string name="test_sound">Test sound</string>
+    <string name="change_sound">Change</string>
+
+    <string name="notification_channel_name">Work timer</string>
+    <string name="notification_channel_desc">Persistent notification while the work day is running</string>
+    <string name="alarm_channel_name">Leaving signal</string>
+    <string name="alarm_channel_desc">"Time to go home" signal with sound and vibration</string>
+
+    <string name="notification_title">Work day in progress</string>
+    <string name="notification_text">Leave at %1$s</string>
+    <string name="notification_text_remaining">Leave at %1$s • %2$s left</string>
+    <string name="remaining_hours_minutes">%1$d h %2$d min</string>
+    <string name="remaining_minutes_only">%1$d min</string>
+    <string name="departure_at">%1$s</string>
+
+    <string name="alarm_title">Time to go home!</string>
+    <string name="alarm_text">Work day is over</string>
+    <string name="alarm_stop_action">Turn off</string>
+
+    <string name="weekend_message">Today is a day off</string>
+    <string name="timer_start_hint">Tap to turn on the leaving signal</string>
+    <string name="timer_running_hint">Leaving signal is on</string>
+    <string name="workday_finished_hint">Work day is already over</string>
+    <string name="action_start">Turn on leaving signal</string>
+    <string name="action_stop">Turn off signal</string>
+    <string name="alarm_active_card">Time to go home!</string>
+    <string name="alarm_silence">Turn off signal</string>
+    <string name="alarm_auto_stop_hint">Signal will turn off itself in a minute</string>
+    <string name="settings_picker_title">Duration</string>
+    <string name="settings_picker_ok">OK</string>
+    <string name="settings_picker_cancel">Cancel</string>
+
+    <string name="settings_language">Language</string>
+    <string name="settings_language_system">System default</string>
+    <string name="settings_language_russian">Русский</string>
+    <string name="settings_language_english">English</string>
+</resources>

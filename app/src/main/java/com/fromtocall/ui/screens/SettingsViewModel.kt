@@ -2,6 +2,8 @@ package com.fromtocall.ui.screens
 
 import android.app.Application
 import android.media.RingtoneManager
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.fromtocall.data.SettingsRepository
@@ -23,7 +25,11 @@ data class SettingsUiState(
     val workdaySundayHours: Int = 7,
     val workdaySundayMinutes: Int = 45,
     val soundUri: String = "",
-    val soundName: String = "Default"
+    val soundName: String = "Default",
+    // Тег выбранного языка: "" = системный, "ru", "en". Состояние читается
+    // из AppCompatDelegate при инициализации, а не из DataStore, чтобы был
+    // единый источник правды.
+    val languageTag: String = ""
 )
 
 @HiltViewModel
@@ -70,7 +76,8 @@ class SettingsViewModel @Inject constructor(
                 workdaySundayHours = sunday / 60,
                 workdaySundayMinutes = sunday % 60,
                 soundUri = sound,
-                soundName = soundName
+                soundName = soundName,
+                languageTag = currentLanguageTag()
             )
         }
     }
@@ -136,5 +143,24 @@ class SettingsViewModel @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    /**
+     * Применяет выбранный язык. Хранилище — AppCompatDelegate, а не DataStore:
+     * система сама запоминает выбор и сама применяет его при следующем старте.
+     * Чтобы интерфейс сразу перерисовался на новом языке, вызвавшая сторона
+     * должна пересоздать активити (это делает Composable, см. SettingsScreen).
+     */
+    fun setLanguage(tag: String) {
+        val locales = if (tag.isEmpty()) LocaleListCompat.getEmptyLocaleList()
+        else LocaleListCompat.forLanguageTags(tag)
+        AppCompatDelegate.setApplicationLocales(locales)
+        _uiState.value = _uiState.value.copy(languageTag = tag)
+    }
+
+    private fun currentLanguageTag(): String {
+        val locales = AppCompatDelegate.getApplicationLocales()
+        if (locales.isEmpty) return ""
+        return locales.get(0)?.toLanguageTag()?.substringBefore("-") ?: ""
     }
 }

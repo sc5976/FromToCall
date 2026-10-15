@@ -124,6 +124,17 @@ fun SettingsScreen(
                 onTimeChange = viewModel::updateWorkdaySunday
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+            LanguageRow(
+                currentTag = uiState.languageTag,
+                onSelect = { tag ->
+                    viewModel.setLanguage(tag)
+                    // Перерисовываем активити, чтобы все строки подхватили
+                    // новый locale без перезапуска приложения.
+                    (context as? android.app.Activity)?.recreate()
+                }
+            )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             // Звук — отдельной карточкой: там кнопки и текст, не влезает в строку.
@@ -179,6 +190,104 @@ fun SettingsScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun LanguageRow(
+    currentTag: String,
+    onSelect: (String) -> Unit
+) {
+    var showDialog by remember { mutableStateOf(false) }
+    val currentLabel = when (currentTag) {
+        "ru" -> stringResource(R.string.settings_language_russian)
+        "en" -> stringResource(R.string.settings_language_english)
+        else -> stringResource(R.string.settings_language_system)
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { showDialog = true },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.settings_language),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = currentLabel,
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp, fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(stringResource(R.string.settings_language)) },
+            text = {
+                Column {
+                    LanguageOption(currentTag, "", R.string.settings_language_system) {
+                        onSelect("")
+                        showDialog = false
+                    }
+                    LanguageOption(currentTag, "ru", R.string.settings_language_russian) {
+                        onSelect("ru")
+                        showDialog = false
+                    }
+                    LanguageOption(currentTag, "en", R.string.settings_language_english) {
+                        onSelect("en")
+                        showDialog = false
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text(stringResource(R.string.settings_picker_cancel))
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun LanguageOption(
+    currentTag: String,
+    tag: String,
+    @androidx.annotation.StringRes labelRes: Int,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        androidx.compose.material3.RadioButton(
+            selected = currentTag == tag,
+            onClick = onClick
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = stringResource(labelRes),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 
