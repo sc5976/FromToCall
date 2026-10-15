@@ -1,0 +1,35 @@
+# ---------- Gradle / Android ----------
+.gradle/
+build/
+*/build/
+local.properties
+*.iml
+.idea/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ---------- Сборка проекта: артефакты и ключи ----------
+# Подписанный релиз уже лежит в dist/, но в репозиторий не идёт —
+# воспроизводится командой gradlew distRelease.
+dist/
+# Локальный release-keystore. Без него переустановка поверх нового билда
+# не сработает. Держите свой ключ у себя.
+*.jks
+!gradle/wrapper/gradle-wrapper.jar
+
+# ---------- Служебные файлы ----------
+# Результат `netsh wfp show state` — диагностический артефакт, не нужен.
+wfpstate.xml
+*.log
+*.hprof
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Keystore fingerprints (на всякий случай) ----------
+*.keystore
+*.pfx
+*.p12

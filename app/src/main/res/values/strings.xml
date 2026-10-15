@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FromToCall</string>
+    <string name="arrival_time">Время прихода</string>
+    <string name="departure_time">Время ухода</string>
+    <string name="time_remaining">Осталось работать</string>
+    <string name="settings">Настройки</string>
+
+    <string name="workday_full">Понедельник–четверг</string>
+    <string name="workday_short">Пятница</string>
+    <string name="workday_saturday">Суббота</string>
+    <string name="workday_sunday">Воскресенье</string>
+    <string name="notification_sound">Звук уведомления</string>
+    <string name="test_sound">Тест звука</string>
+    <string name="change_sound">Изменить</string>
+
+    <string name="notification_channel_name">Рабочий таймер</string>
+    <string name="notification_channel_desc">Постоянное уведомление, пока идёт рабочий день</string>
+    <string name="alarm_channel_name">Сигнал ухода</string>
+    <string name="alarm_channel_desc">Сигнал «пора уходить» со звуком и вибрацией</string>
+
+    <string name="notification_title">Идёт рабочий день</string>
+    <string name="notification_text">Уход в %1$s</string>
+    <string name="notification_text_remaining">Уход в %1$s • осталось %2$s</string>
+    <string name="remaining_hours_minutes">%1$d ч %2$d мин</string>
+    <string name="remaining_minutes_only">%1$d мин</string>
+    <string name="departure_at">%1$s</string>
+
+    <string name="alarm_title">Пора уходить!</string>
+    <string name="alarm_text">Рабочий день окончен</string>
+    <string name="alarm_stop_action">Отключить</string>
+
+    <string name="weekend_message">Сегодня выходной</string>
+    <string name="timer_start_hint">Нажмите, чтобы включить сигнал ухода</string>
+    <string name="timer_running_hint">Сигнал ухода включён</string>
+    <string name="workday_finished_hint">Рабочий день уже окончен</string>
+    <string name="action_start">Включить сигнал ухода</string>
+    <string name="action_stop">Выключить сигнал</string>
+    <string name="alarm_active_card">Пора уходить!</string>
+    <string name="alarm_silence">Отключить сигнал</string>
+    <string name="alarm_auto_stop_hint">Сигнал отключится сам через минуту</string>
+    <string name="settings_picker_title">Длительность</string>
+    <string name="settings_picker_ok">Готово</string>
+    <string name="settings_picker_cancel">Отмена</string>
+</resources>
