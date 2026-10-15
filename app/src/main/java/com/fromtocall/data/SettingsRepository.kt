@@ -37,12 +37,16 @@ class SettingsRepository @Inject constructor(
         val ARRIVAL_HOUR = intPreferencesKey("arrival_hour")
         val ARRIVAL_MINUTE = intPreferencesKey("arrival_minute")
         val SOUND_URI = stringPreferencesKey("sound_uri")
+        val ACCENT_KEY = stringPreferencesKey("accent_key")
 
         const val DEFAULT_WORKDAY_FULL = 8 * 60 + 45
         const val DEFAULT_WORKDAY_FRIDAY = 7 * 60 + 45
         const val DEFAULT_WORKDAY_SATURDAY = 7 * 60 + 45
         const val DEFAULT_WORKDAY_SUNDAY = 7 * 60 + 45
         const val DEFAULT_WORKDAY_WEEKEND = 7 * 60 + 45
+
+        /** Ключ акцентного цвета по умолчанию — текущий зелёный. */
+        const val DEFAULT_ACCENT_KEY = "green"
 
         /** Стартовое время прихода — то, что сейчас на часах. */
         fun arrivalHourDefault(): Int = java.time.LocalTime.now().hour
@@ -83,6 +87,10 @@ class SettingsRepository @Inject constructor(
         prefs[SOUND_URI] ?: ""
     }
 
+    val accentKey: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[ACCENT_KEY] ?: DEFAULT_ACCENT_KEY
+    }
+
     suspend fun setWorkdayFull(minutes: Int) {
         context.dataStore.edit { prefs -> prefs[WORKDAY_FULL_MINUTES] = minutes }
     }
@@ -108,6 +116,10 @@ class SettingsRepository @Inject constructor(
 
     suspend fun setSoundUri(uri: String) {
         context.dataStore.edit { prefs -> prefs[SOUND_URI] = uri }
+    }
+
+    suspend fun setAccentKey(key: String) {
+        context.dataStore.edit { prefs -> prefs[ACCENT_KEY] = key }
     }
 }
 

@@ -10,10 +10,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Primary,
-    onPrimary = OnPrimary,
-    primaryContainer = PrimaryVariant,
+private val DarkBase = darkColorScheme(
     secondary = Secondary,
     onSecondary = OnSecondary,
     secondaryContainer = SecondaryVariant,
@@ -29,9 +26,16 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun FromToCallTheme(
+    accentKey: String = "green",
     content: @Composable () -> Unit
 ) {
-    val colorScheme = DarkColorScheme
+    val accent = AccentPalette.byKey(accentKey)
+    val colorScheme = DarkBase.copy(
+        primary = accent.primary,
+        onPrimary = accent.onPrimary,
+        primaryContainer = accent.primaryContainer
+    )
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {

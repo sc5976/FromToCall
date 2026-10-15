@@ -29,7 +29,8 @@ data class SettingsUiState(
     // Тег выбранного языка: "" = системный, "ru", "en". Состояние читается
     // из AppCompatDelegate при инициализации, а не из DataStore, чтобы был
     // единый источник правды.
-    val languageTag: String = ""
+    val languageTag: String = "",
+    val accentKey: String = "green"
 )
 
 @HiltViewModel
@@ -52,6 +53,7 @@ class SettingsViewModel @Inject constructor(
             val saturday = settingsRepository.workdaySaturdayMinutes.first()
             val sunday = settingsRepository.workdaySundayMinutes.first()
             val sound = settingsRepository.soundUri.first()
+            val accent = settingsRepository.accentKey.first()
 
             val context = getApplication<Application>()
             val soundName = if (sound.isNotEmpty()) {
@@ -77,7 +79,8 @@ class SettingsViewModel @Inject constructor(
                 workdaySundayMinutes = sunday % 60,
                 soundUri = sound,
                 soundName = soundName,
-                languageTag = currentLanguageTag()
+                languageTag = currentLanguageTag(),
+                accentKey = accent
             )
         }
     }
@@ -162,5 +165,12 @@ class SettingsViewModel @Inject constructor(
         val locales = AppCompatDelegate.getApplicationLocales()
         if (locales.isEmpty) return ""
         return locales.get(0)?.toLanguageTag()?.substringBefore("-") ?: ""
+    }
+
+    fun setAccent(key: String) {
+        viewModelScope.launch {
+            settingsRepository.setAccentKey(key)
+            _uiState.value = _uiState.value.copy(accentKey = key)
+        }
     }
 }

@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -41,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,6 +52,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fromtocall.R
 import com.fromtocall.ui.components.TimePickerWheel
+import com.fromtocall.ui.theme.AccentPalette
+import com.fromtocall.ui.theme.AccentPreset
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,6 +138,12 @@ fun SettingsScreen(
                     // новый locale без перезапуска приложения.
                     (context as? android.app.Activity)?.recreate()
                 }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+            AccentRow(
+                currentKey = uiState.accentKey,
+                onSelect = { key -> viewModel.setAccent(key) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -371,3 +382,105 @@ private fun DurationRow(
 
 private fun formatDuration(hours: Int, minutes: Int): String =
     String.format(Locale.getDefault(), "%d:%02d", hours, minutes)
+
+@Composable
+private fun AccentRow(
+    currentKey: String,
+    onSelect: (String) -> Unit
+) {
+    var showDialog by remember { mutableStateOf(false) }
+    val current = AccentPalette.byKey(currentKey)
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { showDialog = true },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.settings_accent),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            // Кружок текущего цвета — визуальный превью, без подписи.
+            androidx.compose.foundation.Canvas(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(androidx.compose.foundation.shape.CircleShape)
+            ) {
+                drawCircle(color = current.primary)
+            }
+        }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(stringResource(R.string.settings_accent)) },
+            text = {
+                Column {
+                    AccentPalette.presets.forEach { preset ->
+                        AccentOption(
+                            preset = preset,
+                            selected = preset.key == currentKey,
+                            onClick = {
+                                onSelect(preset.key)
+                                showDialog = false
+                            }
+                        )
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text(stringResource(R.string.settings_picker_cancel))
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun AccentOption(
+    preset: AccentPreset,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        androidx.compose.material3.RadioButton(
+            selected = selected,
+            onClick = onClick
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        androidx.compose.foundation.Canvas(
+            modifier = Modifier
+                .size(24.dp)
+                .clip(androidx.compose.foundation.shape.CircleShape)
+        ) {
+            drawCircle(color = preset.primary)
+        }
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(
+            text = preset.key.replaceFirstChar { it.titlecase(Locale.getDefault()) },
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
