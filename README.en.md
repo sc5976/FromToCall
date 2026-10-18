@@ -7,25 +7,43 @@ three independent ways to remind you.
 
 ## Features
 
-- **Three independent schedules per day of the week**: Monday–Thursday, Friday,
+### Time tracking
+
+- **Four independent durations by day of the week**: Monday–Thursday, Friday,
   Saturday, Sunday — each with its own full duration. No automatic deductions
   ("1 hour for lunch" and the like): the user sets the value as a whole.
+  Saturday and Sunday are independent settings, not a single "weekend"
+  value.
 - **Arrival time** is set to the current time automatically on launch, if the
   timer has not been started yet. You can edit it and tap "Start".
 - **Timer** persists the arrival time in `SharedPreferences`. If the process
   is force-stopped, the next launch restores the same arrival and reschedules
   the alarm.
-- **Countdown** in the persistent notification ("Уход в 21:50 • осталось
-  7 ч 44 мин" / "Leave at 21:50 • 7 h 44 min left"). Updated every 30
-  seconds while the service is alive.
-- **Leaving signal**: looped system-alarm sound + vibration + full-screen
-  notification with a "Turn off" button. While the signal is ringing, the
-  app shows a red card with a "Turn off" button. The signal stops itself
-  after 60 seconds.
-- **Alarm-stream volume** is raised to the maximum for the duration of the
+
+### Leaving signal
+
+- **Sound + vibration + notification** — three independent reminders. The
+  persistent notification shows a countdown ("Leave at 21:50 • 7 h 44 min
+  left"), updated every 30 seconds.
+- **`STREAM_ALARM` volume** is raised to the maximum for the duration of the
   signal and returned to its original value when the signal is turned off.
   This fixes the "vibration works but no sound" issue caused by Android's
-  separate `STREAM_ALARM` control.
+  separate alarm-stream control.
+- **Auto-stop after 60 seconds** in case the phone is not with you.
+- **"Turn off" button** in the notification and inside the app (a red card
+  appears on the main screen while the signal is ringing).
+- **Alarm restored after reboot**.
+
+### Settings
+
+- **Durations** for the four day groups — four rows in settings, each tap
+  opens a dialog with a TimePicker.
+- **Notification sound** — standard Android system ringtone picker.
+- **Interface language**: system default, Русский, English. Default is
+  Русский. The change applies instantly, without restarting the app.
+- **Accent color**: green (default), blue, purple, orange, teal, red.
+  Affects the "Departure time" card, the countdown, button accents. The
+  overall theme stays dark.
 
 ## Build requirements
 
@@ -76,7 +94,8 @@ app/
     service/          # WorkTimerService, AlarmService, receivers
     ui/screens/       # MainScreen, SettingsScreen + ViewModels
     ui/components/    # TimePickerWheel
-  src/main/res/       # strings, drawables, themes
+    ui/theme/         # Theme, AccentPalette
+  src/main/res/       # strings, drawables, themes (RU default, values-en for EN)
 build.gradle.kts      # SDK, dependencies, signingConfig, dist tasks
 settings.gradle.kts
 version.properties    # major/minor, auto-incremented
@@ -88,7 +107,8 @@ version.properties    # major/minor, auto-incremented
   persistent notification with the countdown and (re)schedules the
   `AlarmManager` alarm (with reboot support).
 - `service/AlarmService.kt` — the actual ringing service: wake lock,
-  `MediaPlayer` for sound, vibration, auto-stop after 60 s.
+  `MediaPlayer` for sound, vibration, auto-stop after 60 s, temporary
+  `STREAM_ALARM` boost.
 - `service/AlarmReceiver.kt` — routing `AlarmManager → AlarmService`.
 - `service/StopAlarmReceiver.kt` — the "Turn off" button in the
   notification.
@@ -96,7 +116,10 @@ version.properties    # major/minor, auto-incremented
 - `ui/screens/MainViewModel.kt` — reactive store, recomputes the
   remaining time on every tick and on every change of arrival / settings.
 - `ui/screens/SettingsViewModel.kt` + `SettingsScreen.kt` — four duration
-  rows (Mon–Thu / Fri / Sat / Sun) and sound picker.
+  rows (Mon–Thu / Fri / Sat / Sun), sound picker, language switcher,
+  accent color palette.
+- `ui/theme/AccentPalette.kt` — six accent color presets (green, blue,
+  purple, orange, teal, red).
 
 ## License
 
